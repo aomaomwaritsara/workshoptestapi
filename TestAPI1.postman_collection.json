@@ -1,0 +1,322 @@
+{
+	"info": {
+		"_postman_id": "3aac5a8f-5dd5-43c7-b480-162a42d5f3b3",
+		"name": "TestAPI1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40923668"
+	},
+	"item": [
+		{
+			"name": "GET a post",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"  pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has the required fields - userId, id, title, and body\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('array');",
+							"    responseData.forEach(function(post) {",
+							"        pm.expect(post).to.have.property('userId');",
+							"        pm.expect(post.userId).to.be.a('number');",
+							"        ",
+							"        pm.expect(post).to.have.property('id');",
+							"        pm.expect(post.id).to.be.a('number');",
+							"        ",
+							"        pm.expect(post).to.have.property('title');",
+							"        pm.expect(post.title).to.be.a('string');",
+							"        ",
+							"        pm.expect(post).to.have.property('body');",
+							"        pm.expect(post.body).to.be.a('string');",
+							"    });",
+							"});",
+							"",
+							"",
+							"pm.test(\"UserId and id are non-negative integers\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    responseData.forEach(function(post) {",
+							"        pm.expect(post.userId).to.be.a('number').and.to.be.at.least(0);",
+							"        pm.expect(post.id).to.be.a('number').and.to.be.at.least(0);",
+							"    });",
+							"});",
+							"",
+							"",
+							"pm.test(\"Title and body are non-empty strings\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    responseData.forEach(function(post) {",
+							"        pm.expect(post.title).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Title should not be empty\");",
+							"        pm.expect(post.body).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Body should not be empty\");",
+							"    });",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://jsonplaceholder.typicode.com/posts",
+					"protocol": "https",
+					"host": [
+						"jsonplaceholder",
+						"typicode",
+						"com"
+					],
+					"path": [
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a Post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"try {",
+							"    const response = await pm.sendRequest({",
+							"        url: \"https://postman-echo.com/get\",",
+							"        method: \"GET\"",
+							"    });",
+							"",
+							"    console.log(response.json());",
+							"} catch (err) {",
+							"    console.error(err);",
+							"}",
+							"pm.test(\"Response time is less than 300ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(300);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\" : \"foo\",\n    \"body\" : \"bar\",\n    \"userId\" :  1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://jsonplaceholder.typicode.com/posts",
+					"protocol": "https",
+					"host": [
+						"jsonplaceholder",
+						"typicode",
+						"com"
+					],
+					"path": [
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update a post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"  pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 300ms\", function () {",
+							"  pm.expect(pm.response.responseTime).to.be.below(300);",
+							"});",
+							"",
+							"pm.test(\"Response has the required fields - title, body, userId, and id\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.title).to.exist;",
+							"    pm.expect(responseData.body).to.exist;",
+							"    pm.expect(responseData.userId).to.exist;",
+							"    pm.expect(responseData.id).to.exist;",
+							"});",
+							"",
+							"pm.test(\"Title and body are non-empty strings\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.title).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Title should not be empty\");",
+							"    pm.expect(responseData.body).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Body should not be empty\");",
+							"});",
+							"",
+							"pm.test(\"UserId and id are non-negative integers\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData.userId).to.be.a('number').and.to.be.at.least(0);",
+							"  pm.expect(responseData.id).to.be.a('number').and.to.be.at.least(0);",
+							"});",
+							"",
+							"var template = `",
+							"<style type=\"text/css\">",
+							"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}",
+							"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}",
+							"    .tftable tr {background-color:#ffffff;}",
+							"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}",
+							"    .tftable tr:hover {background-color:#e0ffff;}",
+							"</style>",
+							"",
+							"<table class=\"tftable\" border=\"1\">",
+							"    <tr>",
+							"        <th>Title</th>",
+							"        <td>{{response.title}}</td>",
+							"    </tr>",
+							"    <tr>",
+							"        <th>Body</th>",
+							"        <td>{{response.body}}</td>",
+							"    </tr>",
+							"    <tr>",
+							"        <th>UserId</th>",
+							"        <td>{{response.userId}}</td>",
+							"    </tr>",
+							"    <tr>",
+							"        <th>Id</th>",
+							"        <td>{{response.id}}</td>",
+							"    </tr>",
+							"</table>`;",
+							"",
+							"function constructVisualizerPayload() {",
+							"    var res = pm.response.json();",
+							"",
+							"    var visualizerData = {",
+							"        title: res.title,",
+							"        body: res.body,",
+							"        userId: res.userId,",
+							"        id: res.id",
+							"    };",
+							"",
+							"    return {response: visualizerData};",
+							"}",
+							"",
+							"let response = pm.response.json()",
+							"pm.environment.set(\"id\",response.id);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\" : \"aom\",\n    \"body\" : \"bar\",\n    \"userId\" :  1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/posts/:id",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"posts",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "del a post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"response body is {}\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.eql({});",
+							"});",
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"  pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/posts/:id",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"posts",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
